@@ -81,11 +81,11 @@
                 if (!value) {
                     return;
                 }
-                
+
                 function addEvepraisalAJAX(url, callbackFunction) {
                     $.ajax({
                         dataType: 'json',
-                        url: 'http://whateverorigin.org/get?url=' + encodeURIComponent(url + '.json') + '&callback=?',
+                        url: 'https://crossorigin.me/' + url + '.json',
                         success: function(data) {
                             callbackFunction(data);
                         }
@@ -93,7 +93,7 @@
                 };
 
                 addEvepraisalAJAX(value, $.proxy(function(data) {
-                    this.evepraisals.push(data.contents);
+                    this.evepraisals.push(data);
                 }, this));
 
                 this.newEvepraisal = '';
