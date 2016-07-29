@@ -23,6 +23,34 @@
 
             evepraisalsRepr: function() {
                 return JSON.stringify(this.evepraisals);
+            },
+
+            totalShares: function() {
+                var sum = 0;
+                for (var i = 0; i < this.fleet.length; i++) {
+                    sum += this.fleet[i].shares;
+                }
+                return sum;
+            },
+
+            buyPrice: function() {
+                var sum = 0
+                for (var i = 0; i < this.evepraisals.length; i++) {
+                    sum += this.evepraisals[i].totals.buy;
+                }
+                return sum;
+            },
+
+            sellPrice: function() {
+                var sum = 0
+                for (var i = 0; i < this.evepraisals.length; i++) {
+                    sum += this.evepraisals[i].totals.sell;
+                }
+                return sum;
+            },
+
+            avgPrice: function() {
+                return (this.buyPrice + this.sellPrice) / 2;
             }
 
         },
@@ -35,7 +63,7 @@
                 if (!value) {
                     return;
                 }
-                this.fleet.push({name: value, split: 1});
+                this.fleet.push({name: value, shares: 1});
                 this.newFleetMember = '';
             },
 
@@ -48,19 +76,42 @@
                 if (!value) {
                     return;
                 }
-                this.evepraisals.push({url: value});
+                
+                function addEvepraisalAJAX(url, callbackFunction) {
+                    $.ajax({
+                        dataType: 'json',
+                        url: 'http://whateverorigin.org/get?url=' + encodeURIComponent(url + '.json') + '&callback=?',
+                        success: function(data) {
+                            callbackFunction(data);
+                        }
+                    });
+                };
+
+                addEvepraisalAJAX(value, $.proxy(function(data) {
+                    this.evepraisals.push(data.contents);
+                }, this));
+
                 this.newEvepraisal = '';
-                this.$http.get(value + '.json').then((response) => {
-                    console.log(response);
-                }, (response) => {
-                    console.log('the request failed');
-                });
             },
 
-            removeEvePraisal: function(evepraisal) {
+            removeEvepraisal: function(evepraisal) {
                 this.evepraisals.$remove(evepraisal);
             },
 
+        },
+
+        components: {
+            fleetMember: {
+                computed: {
+                    payout: function() {
+                        //  1      x
+                        // --- =  ---
+                        // 3.5    300
+                        alert('payout running');
+                        return (this.shares * avgPrice) / totalShares;
+                    }
+                }
+            }
         },
 
         // custom directive to wait for the DOM to be updated before focusing
