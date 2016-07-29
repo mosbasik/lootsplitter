@@ -1,6 +1,11 @@
 
 
 (function (exports) {
+
+    // var fleetMember = Vue.extend({
+        
+    // })
+
     exports.app = new Vue({
 
         // the root element that will be compiled

@@ -44,7 +44,7 @@
       <ul>
         <li v-for="evepraisal in evepraisals">
           <div class="">
-            <label><a href="http://evepraisal.com/e/{{ evepraisal.id }}">http://evepraisal.com/e/{{ evepraisal.id }}</a> = {{ (evepraisal.totals.buy + evepraisal.totals.sell) / 2 }}</label>
+            <label><a href="http://evepraisal.com/e/{{ evepraisal.id }}">http://evepraisal.com/e/{{ evepraisal.id }}</a> = {{ (evepraisal.totals.buy + evepraisal.totals.sell) / 2 | currency '' 2 }}</label>
             <button @click="removeEvepraisal(evepraisal)">Remove</button>
           </div>
         </li>
@@ -54,9 +54,9 @@
       <input autofocus placeholder="Name of fleet member" v-model="newFleetMember" @keyup.enter="addFleetMember">
 
       <ul>
-        <li v-for="fleetMember in fleet" v-component="fleetMember">
+        <li v-for="fleetMember in fleet">
           <div class="view">
-            <label @dblclick="editFleetMember(fleetMember)">{{ fleetMember.name }} / Shares: {{ fleetMember.shares }} / Payout: {{ payout }}</label>
+            <label @dblclick="editFleetMember(fleetMember)">{{ fleetMember.name }} / Shares: {{ fleetMember.shares }} / Payout: {{ (avgPrice/totalShares)*fleetMember.shares | currency '' 2 }}</label>
             <button @click="removeFleetMember(fleetMember)">Remove</button>
           </div>
         </li>
