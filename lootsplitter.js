@@ -68,7 +68,10 @@
                 if (!value) {
                     return;
                 }
-                this.fleet.push({name: value, shares: 1});
+                var lines = value.split(/\r\n|\r|\n/g);
+                for (line of lines) {
+                    this.fleet.push({name: line, shares: 1});
+                }
                 this.newFleetMember = '';
             },
 

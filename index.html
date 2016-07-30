@@ -33,34 +33,72 @@
       <hr>
 
       <h1>Loot Splitter</h1>
-      
+
       <h2>Evepraisal Links</h2>
-      big example link: <input readonly value="http://evepraisal.com/e/11993877"></input>
+      big example link:
       <br>
-      small example link: <input readonly value="http://evepraisal.com/e/12000787"></input>
+      <input readonly value="http://evepraisal.com/e/11993877"></input>
+      <br>
+      small example link:
+      <br>
+      <input readonly value="http://evepraisal.com/e/12000787"></input>
+      <br>
       <br>
       <input autofocus placeholder="http://evepraisal.com/e/xxxxxxxx" v-model="newEvepraisal" @keyup.enter="addEvepraisal">
 
-      <ul>
-        <li v-for="evepraisal in evepraisals">
-          <div class="">
-            <label><a href="http://evepraisal.com/e/{{ evepraisal.id }}">http://evepraisal.com/e/{{ evepraisal.id }}</a> = {{ (evepraisal.totals.buy + evepraisal.totals.sell) / 2 | currency '' 2 }}</label>
-            <button @click="removeEvepraisal(evepraisal)">Remove</button>
-          </div>
-        </li>
-      </ul>
-      
-      <h2>Fleet Members</h2>
-      <input autofocus placeholder="Name of fleet member" v-model="newFleetMember" @keyup.enter="addFleetMember">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Evepraisal Link</th>
+            <th>Average Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="evepraisal in evepraisals">
+            <td><button @click="removeEvepraisal(evepraisal)"> x </button> <a href="http://evepraisal.com/e/{{ evepraisal.id }}">http://evepraisal.com/e/{{ evepraisal.id }}</a></td>
+            <td>{{ (evepraisal.totals.buy + evepraisal.totals.sell) / 2 | currency '' 2 }}</td>
+          </tr>
+        </tbody>
+      </table>
 
-      <ul>
+      <h2>Fleet Members</h2>
+
+      example names:
+      <br>
+      <textarea autofocus>Mussah Yacoub
+Egon Big'Memes
+Vega Onren
+Reyni Allas-Rui
+      </textarea>
+      <br>
+      <br>
+      <textarea autofocus placeholder="Name of fleet member" v-model="newFleetMember" @keyup.enter="addFleetMember"></textarea>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Character</th>
+            <th>Number of Shares</th>
+            <th>Payout</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="fleetMember in fleet">
+            <td><button @click="removeFleetMember(fleetMember)"> x </button> {{ fleetMember.name }}</td>
+            <td>{{ fleetMember.shares }}</td>
+            <td>{{ (avgPrice/totalShares)*fleetMember.shares | currency '' 2 }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- <ul>
         <li v-for="fleetMember in fleet">
           <div class="view">
             <label @dblclick="editFleetMember(fleetMember)">{{ fleetMember.name }} / Shares: {{ fleetMember.shares }} / Payout: {{ (avgPrice/totalShares)*fleetMember.shares | currency '' 2 }}</label>
             <button @click="removeFleetMember(fleetMember)">Remove</button>
           </div>
         </li>
-      </ul>
+      </ul> -->
     </div>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
