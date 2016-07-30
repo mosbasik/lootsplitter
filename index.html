@@ -35,58 +35,68 @@
       <h1>Loot Splitter</h1>
 
       <h2>Evepraisal Links</h2>
-
-      <input autofocus placeholder="http://evepraisal.com/e/xxxxxxxx" v-model="newEvepraisal" @keyup.enter="addEvepraisal">
-      <button @click="demoAddEvepraisal('http://evepraisal.com/e/11993877')">Rolling Mega Evepraisal</button>
-      <button @click="demoAddEvepraisal('http://evepraisal.com/e/12000787')">Sisters Launcher Evepraisal</button>
+  
+      <label for="input-evepraisals">Paste Evepraisal links here and press Enter to submit:</label>
+      <br>
+      <input id="input-evepraisals" autofocus placeholder="http://evepraisal.com/e/xxxxxxxx" v-model="newEvepraisal" @keyup.enter="addEvepraisal">
+      <button @click="demoAddEvepraisal('http://evepraisal.com/e/11993877')">Demo: Rolling Mega Evepraisal</button>
+      <button @click="demoAddEvepraisal('http://evepraisal.com/e/12000787')">Demo: Sisters Launcher Evepraisal</button>
       <br><br>
       <table class="table">
         <thead>
           <tr>
             <th>Evepraisal Link</th>
-            <th>Average of Buy/Sell Prices</th>
+            <th>Location</th>
+            <th>Type</th>
+            <th>Buy Value</th>
+            <th>Sell Value</th>
+            <th>Average Value</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="evepraisal in evepraisals">
             <td><button @click="removeEvepraisal(evepraisal)"> x </button> <a target="_blank" href="http://evepraisal.com/e/{{ evepraisal.id }}">http://evepraisal.com/e/{{ evepraisal.id }}</a></td>
+            <td>{{ evepraisal.market_name }}</td>
+            <td>{{ evepraisal.kind }}</td>
+            <td>{{ evepraisal.totals.buy | currency "" 2 }}</td>
+            <td>{{ evepraisal.totals.sell | currency "" 2 }}</td>
             <td>{{ (evepraisal.totals.buy + evepraisal.totals.sell) / 2 | currency '' 2 }}</td>
           </tr>
         </tbody>
+        <tfoot>
+          <tr>
+            <th>Totals:</th>
+            <th></th>
+            <th></th>
+            <th>{{ buyPrice | currency "" 2 }}</th>
+            <th>{{ sellPrice | currency "" 2 }}</th>
+            <th>{{ avgPrice | currency "" 2 }}</th>
+          </tr>
+        </tfoot>
       </table>
 
       <h2>Fleet Members</h2>
-
-      <b>Demo Names:</b>
-      <tt>
-      <br>
-      Mussah Yacoub
-      <br>
-      Egon Big'Memes
-      <br>
-      Vega Onren
-      <br>
-      Reyni Allas-Rui
-      </tt>
-      <br>
-      <br>
+      
       <label for="fleet-member-input">Paste fleet member names here and press Enter to submit:</label>
       <br>
       <textarea id="fleet-member-input" autofocus v-model="newFleetMember" @keyup.enter="addFleetMember"></textarea>
+      <br>
+      <button @click="demoAddFleetMember('Mussah Yacoub\nEgon Big\'Memes\nVega Onren\nReyni Allas-Rui')">Demo: All-Out Directors Fleet</button>
       <br><br>
       <table class="table">
         <thead>
           <tr>
             <th>Character</th>
             <th>Number of Shares</th>
+            <th>Percent of Total</th>
             <th>Payout</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="fleetMember in fleet">
             <td><button @click="removeFleetMember(fleetMember)"> x </button> {{ fleetMember.name }}</td>
-            <!-- <td><input @change="updateShares(fleetMember)" value="{{ fleetMember.shares }}"> {{ fleetMember.shares }}</td> -->
             <td><input v-model="fleet[$index].shares" debounce="500" value="{{ fleetMember.shares }}"></td>
+            <td>{{ fleet[$index].shares / totalShares * 100 | currency '' 2 }}%</td>
             <td>{{ (avgPrice/totalShares)*fleetMember.shares | currency '' 2 }}</td>
           </tr>
         </tbody>
