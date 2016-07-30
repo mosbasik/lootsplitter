@@ -32,24 +32,24 @@
 
             totalShares: function() {
                 var sum = 0;
-                for (var i = 0; i < this.fleet.length; i++) {
-                    sum += this.fleet[i].shares;
+                for (fleetMember of this.fleet) {
+                    sum += parseFloat(fleetMember.shares);
                 }
                 return sum;
             },
 
             buyPrice: function() {
                 var sum = 0
-                for (var i = 0; i < this.evepraisals.length; i++) {
-                    sum += this.evepraisals[i].totals.buy;
+                for (evepraisal of this.evepraisals) {
+                    sum += evepraisal.totals.buy;
                 }
                 return sum;
             },
 
             sellPrice: function() {
                 var sum = 0
-                for (var i = 0; i < this.evepraisals.length; i++) {
-                    sum += this.evepraisals[i].totals.sell;
+                for (evepraisal of this.evepraisals) {
+                    sum += evepraisal.totals.sell;
                 }
                 return sum;
             },
@@ -77,6 +77,11 @@
 
             removeFleetMember: function(fleetMember) {
                 this.fleet.$remove(fleetMember);
+            },
+
+            demoAddEvepraisal: function(url) {
+                this.newEvepraisal = url;
+                this.addEvepraisal();
             },
 
             addEvepraisal: function() {
@@ -108,19 +113,7 @@
 
         },
 
-        components: {
-            fleetMember: {
-                computed: {
-                    payout: function() {
-                        //  1      x
-                        // --- =  ---
-                        // 3.5    300
-                        alert('payout running');
-                        return (this.shares * avgPrice) / totalShares;
-                    }
-                }
-            }
-        },
+
 
         // custom directive to wait for the DOM to be updated before focusing
         // on the input field
