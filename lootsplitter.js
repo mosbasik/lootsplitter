@@ -62,7 +62,12 @@
 
         // methods that implement data logic
         methods: {
-            
+                
+            demoAddFleetMember: function(names) {
+                this.newFleetMember = names;
+                this.addFleetMember();
+            },
+
             addFleetMember: function() {
                 var value = this.newFleetMember && this.newFleetMember.trim();
                 if (!value) {
