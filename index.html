@@ -13,24 +13,6 @@
   <body>
 
     <div id="splitterapp">
-      <!-- fleet: {{ fleetRepr }}
-      <br> -->
-      <!-- newFleetMember: {{ newFleetMember }}
-      <br> -->
-      <!-- evepraisals: {{ evepraisalsRepr }}
-      <br> -->
-      <!-- newEvepraisal: {{ newEvepraisal }}
-      <br> -->
-      <!-- totalShares: {{ totalShares }}
-      <br> -->
-      <!-- buyPrice: {{ buyPrice }}
-      <br> -->
-      <!-- sellPrice: {{ sellPrice }}
-      <br> -->
-      <!-- avgPrice: {{ avgPrice }}
-      <br> -->
-
-      <hr>
 
       <h1>Loot Splitter</h1>
 
@@ -38,7 +20,7 @@
   
       <label for="input-evepraisals">Paste Evepraisal links here and press Enter to submit:</label>
       <br>
-      <input id="input-evepraisals" autofocus placeholder="http://evepraisal.com/e/xxxxxxxx" v-model="newEvepraisal" @keyup.enter="addEvepraisal">
+      <input id="input-evepraisals" autofocus v-model="newEvepraisal" @keyup.enter="addEvepraisal">
       <button @click="demoAddEvepraisal('http://evepraisal.com/e/11993877')">Demo: Rolling Mega Evepraisal</button>
       <button @click="demoAddEvepraisal('http://evepraisal.com/e/12000787')">Demo: Sisters Launcher Evepraisal</button>
       <br><br>

@@ -84,6 +84,17 @@
                 this.fleet.$remove(fleetMember);
             },
 
+            addValue: function() {
+                if (/https?:\/\/evepraisal\.com\/e\/\d+/.test(this.newEvepraisal)) {
+                    alert('evepraisal: ' + this.newEvepraisal);
+                    addEvepraisal();
+                } else if (/^\d*\.?\d+$/.test(this.newEvepraisal)) {
+                    alert(parseFloat(this.newEvepraisal));
+                } else {
+                    console.log('Invalid value input.');
+                }
+            },
+
             demoAddEvepraisal: function(url) {
                 this.newEvepraisal = url;
                 this.addEvepraisal();
