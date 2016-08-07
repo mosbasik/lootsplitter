@@ -15,47 +15,52 @@
         data: {
             fleet: [],
             newFleetMember: '',
+            iskAmounts: [],
             evepraisals: [],
-            newEvepraisal: '',
+            newValue: '',
         },
 
         // computed properties
         computed: {
-            
-            fleetRepr: function() {
-                return JSON.stringify(this.fleet);
-            },
-
-            evepraisalsRepr: function() {
-                return JSON.stringify(this.evepraisals);
-            },
 
             totalShares: function() {
                 var sum = 0;
-                for (fleetMember of this.fleet) {
+                for (var fleetMember of this.fleet) {
                     sum += parseFloat(fleetMember.shares);
                 }
                 return sum;
             },
 
-            buyPrice: function() {
-                var sum = 0
-                for (evepraisal of this.evepraisals) {
+            totalIskAmounts: function() {
+                var sum = 0;
+                for (var iskAmount of this.iskAmounts) {
+                    sum += iskAmount[0];
+                }
+                return sum;
+            },
+
+            totalEvepraisalsBuy: function() {
+                var sum = 0;
+                for (var evepraisal of this.evepraisals) {
                     sum += evepraisal.totals.buy;
                 }
                 return sum;
             },
 
-            sellPrice: function() {
-                var sum = 0
-                for (evepraisal of this.evepraisals) {
+            totalEvepraisalsSell: function() {
+                var sum = 0;
+                for (var evepraisal of this.evepraisals) {
                     sum += evepraisal.totals.sell;
                 }
                 return sum;
             },
 
-            avgPrice: function() {
-                return (this.buyPrice + this.sellPrice) / 2;
+            totalEvepraisalsAvg: function() {
+                return (this.totalEvepraisalsBuy + this.totalEvepraisalsSell) / 2;
+            },
+
+            totalValue: function() {
+                return this.totalIskAmounts + this.totalEvepraisalsAvg;
             }
 
         },
@@ -74,7 +79,7 @@
                     return;
                 }
                 var lines = value.split(/\r\n|\r|\n/g);
-                for (line of lines) {
+                for (var line of lines) {
                     this.fleet.push({name: line, shares: 1});
                 }
                 this.newFleetMember = '';
@@ -85,26 +90,35 @@
             },
 
             addValue: function() {
-                if (/https?:\/\/evepraisal\.com\/e\/\d+/.test(this.newEvepraisal)) {
-                    alert('evepraisal: ' + this.newEvepraisal);
-                    addEvepraisal();
-                } else if (/^\d*\.?\d+$/.test(this.newEvepraisal)) {
-                    alert(parseFloat(this.newEvepraisal));
+                var value = this.newValue && this.newValue.trim();
+                if (!value) {
+                    return;
+                } else if (/https?:\/\/evepraisal\.com\/e\/\d+/.test(this.newValue)) {
+                    alert('evepraisal: ' + this.newValue);
+                    this.addEvepraisal();
+                } else if (/^\d*\.?\d+$/.test(this.newValue)) {
+                    // alert(parseFloat(this.newValue));
+                    this.addIskAmount();
                 } else {
                     console.log('Invalid value input.');
                 }
             },
 
+            addIskAmount: function() {
+                this.iskAmounts.push([parseFloat(this.newValue)]);
+                this.newValue = '';
+            },
+
+            removeIskAmount: function(iskAmount) {
+                this.iskAmounts.$remove(iskAmount);
+            },
+
             demoAddEvepraisal: function(url) {
-                this.newEvepraisal = url;
+                this.newValue = url;
                 this.addEvepraisal();
             },
 
             addEvepraisal: function() {
-                var value = this.newEvepraisal && this.newEvepraisal.trim();
-                if (!value) {
-                    return;
-                }
 
                 function addEvepraisalAJAX(url, callbackFunction) {
                     $.ajax({
@@ -114,13 +128,13 @@
                             callbackFunction(data);
                         }
                     });
-                };
+                }
 
-                addEvepraisalAJAX(value, $.proxy(function(data) {
+                addEvepraisalAJAX(this.newValue.trim(), $.proxy(function(data) {
                     this.evepraisals.push(data);
                 }, this));
 
-                this.newEvepraisal = '';
+                this.newValue = '';
             },
 
             removeEvepraisal: function(evepraisal) {
