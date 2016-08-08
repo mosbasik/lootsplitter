@@ -10,113 +10,140 @@
 
   </head>
 
-  <body>
+  <body class="container">
 
     <div id="splitterapp">
 
-      <h1>Loot Splitter</h1>
+      <div class="row">
+        <h1>Loot Splitter</h1>
+      </div>
 
-      <h2>Value Input</h2>
-      <label for="input-evepraisals">Paste ISK amounts or Evepraisal links here.  Press Enter to submit:</label>
-      <br>
-      <input id="input-evepraisals" autofocus v-model="newValue" @keyup.enter="addValue">
-      <button @click="demoAddEvepraisal('http://evepraisal.com/e/11993877')">Demo: Rolling Mega Evepraisal</button>
-      <button @click="demoAddEvepraisal('http://evepraisal.com/e/12000787')">Demo: Sisters Launcher Evepraisal</button>
+      <div class="row">
 
-      <div v-if="iskAmounts.length" >
-        <h3>ISK Amounts</h3>
-        <table class="table">
+        <h2>Value Input</h2>
+        <br>
+
+        <div class="form-group">
+          <label for="input-evepraisals">Input ISK amounts/Evepraisal links one at at time:</label>
+          <input id="input-evepraisals" class="form-control" placeholder="Press ENTER to submit" autofocus v-model="newValue" @keyup.enter="addValue">
+        </div>
+        <div class="form-group">
+          <button class="btn btn-default" @click="demoAddEvepraisal('http://evepraisal.com/e/11993877')">Demo: Rolling Mega Evepraisal</button>
+          <button class="btn btn-default" @click="demoAddEvepraisal('http://evepraisal.com/e/12000787')">Demo: Sisters Launcher Evepraisal</button>
+        </div>
+
+        <div class="row">
+
+          <div v-if="iskAmounts.length" class="col-lg-4">
+            <h3>ISK</h3>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th class="isk-header">Amount</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="iskAmount in iskAmounts">
+                  <td></td>
+                  <td class="isk"><span>{{ iskAmount | currency '' 2 }}</span></td>
+                  <td class="table-button"><button class="btn btn-danger btn-xs" @click="removeIskAmount(iskAmount)">x</button></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Totals:</th>
+                  <th class="isk">{{ totalIskAmounts | currency '' 2 }}</th>
+                  <th></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div v-if="evepraisals.length" class="col-lg-8">
+            <h3>Evepraisals</h3>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Link</th>
+                  <th>Hub</th>
+                  <th>Type</th>
+                  <th class="isk-header">Buy</th>
+                  <th class="isk-header">Sell</th>
+                  <th class="isk-header">Average</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="evepraisal in evepraisals">
+                  <td><a target="_blank" href="http://evepraisal.com/e/{{ evepraisal.id }}">{{ evepraisal.id }}</a></td>
+                  <td>{{ evepraisal.market_name }}</td>
+                  <td>{{ evepraisal.kind }}</td>
+                  <td class="isk">{{ evepraisal.totals.buy | currency '' 2 }}</td>
+                  <td class="isk">{{ evepraisal.totals.sell | currency '' 2 }}</td>
+                  <td class="isk">{{ (evepraisal.totals.buy + evepraisal.totals.sell) / 2 | currency '' 2 }}</td>
+                  <td class="table-button"><button class="btn btn-danger btn-xs" @click="removeEvepraisal(evepraisal)">x</button></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Totals:</th>
+                  <th></th>
+                  <th></th>
+                  <th class="isk">{{ totalEvepraisalsBuy | currency '' 2 }}</th>
+                  <th class="isk">{{ totalEvepraisalsSell | currency '' 2 }}</th>
+                  <th class="isk">{{ totalEvepraisalsAvg | currency '' 2 }}</th>
+                  <th></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <h2>Fleet Members</h2>
+
+        <div class="form-group">
+          <label for="fleet-member-input">Type fleet member names (or paste list copied from the Eve client):</label>
+          <textarea id="fleet-member-input" class="form-control" placeholder="Press ENTER to submit" autofocus v-model="newFleetMember" @keyup.enter="addFleetMember"></textarea>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-default" @click="demoAddFleetMember('Mussah Yacoub\nEgon Big\'Memes\nVega Onren\nReyni Allas-Rui')">Demo: All-Out Directors Fleet</button>
+        </div>
+
+        <table v-if="fleet.length" class="table">
           <thead>
             <tr>
+              <th>Fleet Members</th>
+              <th>Number of Shares</th>
+              <th>Percent of Total</th>
+              <th class="isk-header">Payout</th>
               <th></th>
-              <th class="isk-header">ISK Amount</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="iskAmount in iskAmounts">
-              <td><button @click="removeIskAmount(iskAmount)"> x </button> </td>
-              <td class="isk"><span>{{ iskAmount | currency '' 2 }}</span></td>
+            <tr v-for="fleetMember in fleet">
+              <td>{{ fleetMember.name }}</td>
+              <td><input v-model="fleet[$index].shares" debounce="500" value="{{ fleetMember.shares }}"></td>
+              <td>{{ fleet[$index].shares / totalShares * 100 | currency '' 2 }}%</td>
+              <td class="isk">{{ (totalValue/totalShares)*fleetMember.shares | currency '' 2 }}</td>
+              <td class="table-button"><button class="btn btn-danger btn-xs" @click="removeFleetMember(fleetMember)">x</button> </td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
-              <th>Totals:</th>
-              <th class="isk">{{ totalIskAmounts | currency '' 2 }}</th>
+              <th>{{ fleet.length }} Fleet Members</th>
+              <th>{{ totalShares }} Shares</th>
+              <th>100.00%</th>
+              <th class="isk">{{ totalValue | currency '' 2 }}</th>
+              <th></th>
             </tr>
           </tfoot>
         </table>
       </div>
-
-      <div v-if="evepraisals.length">
-        <h3>Evepraisals</h3>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Evepraisal Link</th>
-              <th>Location</th>
-              <th>Type</th>
-              <th class="isk-header">Buy Value</th>
-              <th class="isk-header">Sell Value</th>
-              <th class="isk-header">Average Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="evepraisal in evepraisals">
-              <td><button @click="removeEvepraisal(evepraisal)"> x </button> <a target="_blank" href="http://evepraisal.com/e/{{ evepraisal.id }}">http://evepraisal.com/e/{{ evepraisal.id }}</a></td>
-              <td>{{ evepraisal.market_name }}</td>
-              <td>{{ evepraisal.kind }}</td>
-              <td class="isk">{{ evepraisal.totals.buy | currency '' 2 }}</td>
-              <td class="isk">{{ evepraisal.totals.sell | currency '' 2 }}</td>
-              <td class="isk">{{ (evepraisal.totals.buy + evepraisal.totals.sell) / 2 | currency '' 2 }}</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <th>Totals:</th>
-              <th></th>
-              <th></th>
-              <th class="isk">{{ totalEvepraisalsBuy | currency '' 2 }}</th>
-              <th class="isk">{{ totalEvepraisalsSell | currency '' 2 }}</th>
-              <th class="isk">{{ totalEvepraisalsAvg | currency '' 2 }}</th>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-
-      <h2>Fleet Members</h2>
-      
-      <label for="fleet-member-input">Paste fleet member names here and press Enter to submit:</label>
-      <br>
-      <textarea id="fleet-member-input" autofocus v-model="newFleetMember" @keyup.enter="addFleetMember"></textarea>
-      <br>
-      <button @click="demoAddFleetMember('Mussah Yacoub\nEgon Big\'Memes\nVega Onren\nReyni Allas-Rui')">Demo: All-Out Directors Fleet</button>
-      <br><br>
-      <table v-if="fleet.length" class="table">
-        <thead>
-          <tr>
-            <th>Fleet Members</th>
-            <th>Number of Shares</th>
-            <th>Percent of Total</th>
-            <th class="isk-header">Payout</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="fleetMember in fleet">
-            <td><button @click="removeFleetMember(fleetMember)"> x </button> {{ fleetMember.name }}</td>
-            <td><input v-model="fleet[$index].shares" debounce="500" value="{{ fleetMember.shares }}"></td>
-            <td>{{ fleet[$index].shares / totalShares * 100 | currency '' 2 }}%</td>
-            <td class="isk">{{ (totalValue/totalShares)*fleetMember.shares | currency '' 2 }}</td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <th>{{ fleet.length }} Fleet Members</th>
-            <th>{{ totalShares }} Shares</th>
-            <th>100.00%</th>
-            <th class="isk">{{ totalValue | currency '' 2 }}</th>
-          </tr>
-        </tfoot>
-      </table>
     </div>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
