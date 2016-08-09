@@ -13,7 +13,7 @@
 
         // app initial state
         data: {
-            fleet: [],
+            fleet: {},
             newFleetMember: '',
             iskAmounts: [],
             evepraisals: [],
@@ -23,10 +23,16 @@
         // computed properties
         computed: {
 
+            fleetSize: function() {
+                return Object.keys(this.fleet).length;
+            },
+
             totalShares: function() {
                 var sum = 0;
-                for (var fleetMember of this.fleet) {
-                    sum += parseFloat(fleetMember.shares);
+                for (var name in this.fleet) {
+                    if (this.fleet[name]) {
+                        sum += parseFloat(this.fleet[name]);
+                    }
                 }
                 return sum;
             },
@@ -61,7 +67,7 @@
 
             totalValue: function() {
                 return this.totalIskAmounts + this.totalEvepraisalsAvg;
-            }
+            },
 
         },
 
@@ -79,46 +85,48 @@
                     return;
                 }
                 var lines = value.split(/\r\n|\r|\n/g);
-                for (var line of lines) {
-                    this.fleet.push({name: line, shares: 1});
+                for (var name of lines) {
+                    this.fleet = Object.assign({}, this.fleet, {[name]: 1});
                 }
                 this.newFleetMember = '';
             },
 
-            removeFleetMember: function(fleetMember) {
-                this.fleet.$remove(fleetMember);
+            removeFleetMember: function(memberName) {
+                Vue.delete(this.fleet, memberName);
+            },
+
+            demoAddValue: function(value) {
+                this.newValue = value;
+                this.addValue();
             },
 
             addValue: function() {
                 var value = this.newValue && this.newValue.trim();
                 if (!value) {
                     return;
-                } else if (/https?:\/\/evepraisal\.com\/e\/\d+/.test(this.newValue)) {
-                    alert('evepraisal: ' + this.newValue);
-                    this.addEvepraisal();
-                } else if (/^\d*\.?\d+$/.test(this.newValue)) {
-                    // alert(parseFloat(this.newValue));
-                    this.addIskAmount();
-                } else {
-                    console.log('Invalid value input.');
                 }
+                var lines = value.split(/\r\n|\r|\n/g);
+                for (var line of lines) {
+                    if (/https?:\/\/evepraisal\.com\/e\/\d+/.test(line)) {
+                        this.addEvepraisal(line);
+                    } else if (/^\d*\.?\d+$/.test(line)) {
+                        this.addIskAmount(line);
+                    } else {
+                        console.log('Invalid value input.');
+                    }
+                }
+                this.newValue = '';
             },
 
-            addIskAmount: function() {
-                this.iskAmounts.push([parseFloat(this.newValue)]);
-                this.newValue = '';
+            addIskAmount: function(amount) {
+                this.iskAmounts.push([parseFloat(amount)]);
             },
 
             removeIskAmount: function(iskAmount) {
                 this.iskAmounts.$remove(iskAmount);
             },
 
-            demoAddEvepraisal: function(url) {
-                this.newValue = url;
-                this.addEvepraisal();
-            },
-
-            addEvepraisal: function() {
+            addEvepraisal: function(url) {
 
                 function addEvepraisalAJAX(url, callbackFunction) {
                     $.ajax({
@@ -130,15 +138,30 @@
                     });
                 }
 
-                addEvepraisalAJAX(this.newValue.trim(), $.proxy(function(data) {
+                addEvepraisalAJAX(url, $.proxy(function(data) {
                     this.evepraisals.push(data);
                 }, this));
 
-                this.newValue = '';
             },
 
             removeEvepraisal: function(evepraisal) {
                 this.evepraisals.$remove(evepraisal);
+            },
+
+            memberPercent: function(memberShares) {
+                if (memberShares) {
+                    return memberShares / this.totalShares * 100;
+                } else {
+                    return 0;
+                }
+            },
+
+            memberPayout: function(memberShares) {
+                if (memberShares) {
+                    return (this.totalValue / this.totalShares) * memberShares;
+                } else {
+                    return 0;
+                }
             },
 
         },
