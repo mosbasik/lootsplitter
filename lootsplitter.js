@@ -13,7 +13,7 @@
 
         // app initial state
         data: {
-            fleet: [],
+            fleet: {},
             newFleetMember: '',
             iskAmounts: [],
             evepraisals: [],
@@ -23,10 +23,16 @@
         // computed properties
         computed: {
 
+            fleetSize: function() {
+                return Object.keys(this.fleet).length;
+            },
+
             totalShares: function() {
                 var sum = 0;
-                for (var fleetMember of this.fleet) {
-                    sum += parseFloat(fleetMember.shares);
+                for (var name in this.fleet) {
+                    if (this.fleet[name]) {
+                        sum += parseFloat(this.fleet[name]);
+                    }
                 }
                 return sum;
             },
@@ -61,7 +67,7 @@
 
             totalValue: function() {
                 return this.totalIskAmounts + this.totalEvepraisalsAvg;
-            }
+            },
 
         },
 
@@ -79,14 +85,14 @@
                     return;
                 }
                 var lines = value.split(/\r\n|\r|\n/g);
-                for (var line of lines) {
-                    this.fleet.push({name: line, shares: 1});
+                for (var name of lines) {
+                    this.fleet = Object.assign({}, this.fleet, {[name]: 1});
                 }
                 this.newFleetMember = '';
             },
 
-            removeFleetMember: function(fleetMember) {
-                this.fleet.$remove(fleetMember);
+            removeFleetMember: function(memberName) {
+                Vue.delete(this.fleet, memberName);
             },
 
             addValue: function() {
@@ -139,6 +145,22 @@
 
             removeEvepraisal: function(evepraisal) {
                 this.evepraisals.$remove(evepraisal);
+            },
+
+            memberPercent: function(memberShares) {
+                if (memberShares) {
+                    return memberShares / this.totalShares * 100;
+                } else {
+                    return 0;
+                }
+            },
+
+            memberPayout: function(memberShares) {
+                if (memberShares) {
+                    return (this.totalValue / this.totalShares) * memberShares;
+                } else {
+                    return 0;
+                }
             },
 
         },
