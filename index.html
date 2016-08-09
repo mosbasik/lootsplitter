@@ -61,7 +61,7 @@
 
       <div class="row">
 
-        <div v-if="iskAmounts.length + evepraisals.length + fleet.length" class="col-lg-12">
+        <div v-if="iskAmounts.length + evepraisals.length + fleetSize" class="col-lg-12">
           <h2>Display</h2>
         </div>
 
@@ -135,7 +135,7 @@
           </div>
         </div>
 
-        <div class="col-lg-4" v-if="fleet.length">
+        <div class="col-lg-4" v-if="fleetSize">
           <h3>Fleet Members</h3>
           <table class="table">
             <thead>
@@ -148,18 +148,18 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="fleetMember in fleet | orderBy 'name'">
-                <td>{{ fleetMember.name }}</td>
-                <td><input class="form-control" v-model="fleet[$index].shares" debounce="500" value="{{ fleetMember.shares }}"></td>
-                <td>{{ fleet[$index].shares / totalShares * 100 | currency '' 2 }}%</td>
-                <td class="isk">{{ (totalValue/totalShares)*fleetMember.shares | currency '' 2 }}</td>
-                <td class="table-button"><button class="btn btn-danger btn-xs" @click="removeFleetMember(fleetMember)">x</button> </td>
+              <tr v-for="(memberName, memberShares) in fleet | orderBy false">
+                <td>{{ memberName }}</td>
+                <td><input class="form-control" v-model="fleet[memberName]" debounce="500" value="{{ memberShares }}"></td>
+                <td>{{ memberPercent(memberShares) | currency '' 2 }}%</td>
+                <td class="isk">{{ memberPayout(memberShares) | currency '' 2 }}</td>
+                <td class="table-button"><button class="btn btn-danger btn-xs" @click="removeFleetMember(memberName)">x</button> </td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
-                <th>{{ fleet.length }} Fleet Members</th>
-                <th>{{ totalShares }} Shares</th>
+                <th>{{ fleetSize }}</th>
+                <th>{{ totalShares }}</th>
                 <th>100.00%</th>
                 <th class="isk">{{ totalValue | currency '' 2 }}</th>
                 <th></th>
