@@ -33,12 +33,15 @@
           <h3>Values</h3>
 
           <div class="form-group">
-            <label for="input-evepraisals">Input ISK amounts/Evepraisal links one at at time:</label>
-            <input id="input-evepraisals" class="form-control" placeholder="Press ENTER to submit" autofocus v-model="newValue" @keyup.enter="addValue"></textarea>
+            <label for="input-evepraisals">Input ISK amounts and Evepraisal links:</label>
+            <textarea id="input-evepraisals" class="form-control" placeholder="{{ 'Supports pasting multiple lines\nPress ENTER to submit' }}" autofocus v-model="newValue" @keyup.enter="addValue"></textarea>
           </div>
           <div class="form-group">
-            <button class="btn btn-default" @click="demoAddEvepraisal('http://evepraisal.com/e/11993877')">Demo: Rolling Mega Evepraisal</button>
-            <button class="btn btn-default" @click="demoAddEvepraisal('http://evepraisal.com/e/12000787')">Demo: Sisters Launcher Evepraisal</button>
+            <label>Demos:</label>
+            <button class="btn btn-default"@click="demoAddValue('100000000')">100m</button>
+            <button class="btn btn-default"@click="demoAddValue('1000000000')">1b</button>
+            <button class="btn btn-default" @click="demoAddValue('http://evepraisal.com/e/11993877')">Rolling Megathron</button>
+            <button class="btn btn-default" @click="demoAddValue('http://evepraisal.com/e/12000787')">Sisters Launcher</button>
           </div>
 
         </div>
@@ -49,10 +52,11 @@
 
           <div class="form-group">
             <label for="fleet-member-input">Input fleet member names:</label>
-            <input id="fleet-member-input" class="form-control" placeholder="Press ENTER to submit" autofocus v-model="newFleetMember" @keyup.enter="addFleetMember"></textarea>
+            <textarea id="fleet-member-input" class="form-control" placeholder="{{ 'Supports pasting multiple lines\nPress ENTER to submit' }}" autofocus v-model="newFleetMember" @keyup.enter="addFleetMember"></textarea>
           </div>
           <div class="form-group">
-            <button class="btn btn-default" @click="demoAddFleetMember('Mussah Yacoub\nEgon Big\'Memes\nVega Onren\nReyni Allas-Rui')">Demo: All-Out Directors Fleet</button>
+            <label>Demos:</label>
+            <button class="btn btn-default" @click="demoAddFleetMember('Mussah Yacoub\nEgon Big\'Memes\nVega Onren\nReyni Allas-Rui')">Four Man Fleet</button>
           </div>
         </div>
 

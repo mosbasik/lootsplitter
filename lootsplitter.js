@@ -95,36 +95,38 @@
                 Vue.delete(this.fleet, memberName);
             },
 
+            demoAddValue: function(value) {
+                this.newValue = value;
+                this.addValue();
+            },
+
             addValue: function() {
                 var value = this.newValue && this.newValue.trim();
                 if (!value) {
                     return;
-                } else if (/https?:\/\/evepraisal\.com\/e\/\d+/.test(this.newValue)) {
-                    alert('evepraisal: ' + this.newValue);
-                    this.addEvepraisal();
-                } else if (/^\d*\.?\d+$/.test(this.newValue)) {
-                    // alert(parseFloat(this.newValue));
-                    this.addIskAmount();
-                } else {
-                    console.log('Invalid value input.');
                 }
+                var lines = value.split(/\r\n|\r|\n/g);
+                for (var line of lines) {
+                    if (/https?:\/\/evepraisal\.com\/e\/\d+/.test(line)) {
+                        this.addEvepraisal(line);
+                    } else if (/^\d*\.?\d+$/.test(line)) {
+                        this.addIskAmount(line);
+                    } else {
+                        console.log('Invalid value input.');
+                    }
+                }
+                this.newValue = '';
             },
 
-            addIskAmount: function() {
-                this.iskAmounts.push([parseFloat(this.newValue)]);
-                this.newValue = '';
+            addIskAmount: function(amount) {
+                this.iskAmounts.push([parseFloat(amount)]);
             },
 
             removeIskAmount: function(iskAmount) {
                 this.iskAmounts.$remove(iskAmount);
             },
 
-            demoAddEvepraisal: function(url) {
-                this.newValue = url;
-                this.addEvepraisal();
-            },
-
-            addEvepraisal: function() {
+            addEvepraisal: function(url) {
 
                 function addEvepraisalAJAX(url, callbackFunction) {
                     $.ajax({
@@ -136,11 +138,10 @@
                     });
                 }
 
-                addEvepraisalAJAX(this.newValue.trim(), $.proxy(function(data) {
+                addEvepraisalAJAX(url, $.proxy(function(data) {
                     this.evepraisals.push(data);
                 }, this));
 
-                this.newValue = '';
             },
 
             removeEvepraisal: function(evepraisal) {
