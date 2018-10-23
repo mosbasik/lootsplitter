@@ -102,7 +102,7 @@
                 }
                 var lines = value.split(/\r\n|\r|\n/g);
                 for (var line of lines) {
-                    if (/https?:\/\/evepraisal\.com\/e\/\d+/.test(line)) {
+                    if (/https?:\/\/evepraisal\.com\/a\/[a-z0-9]+/.test(line)) {
                         this.addEvepraisal(line);
                     } else if (/^\d*\.?\d+$/.test(line)) {
                         this.addIskAmount(line);

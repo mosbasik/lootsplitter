@@ -43,8 +43,8 @@
           <label>Demos:</label>
           <button class="btn btn-default" @click="demoAddValue('100000000')">100m</button>
           <button class="btn btn-default" @click="demoAddValue('1000000000')">1b</button>
-          <button class="btn btn-default" @click="demoAddValue('http://evepraisal.com/e/11993877')">Rolling Megathron</button>
-          <button class="btn btn-default" @click="demoAddValue('http://evepraisal.com/e/12000787')">Sisters Launcher</button>
+          <button class="btn btn-default" @click="demoAddValue('https://evepraisal.com/a/jsne1')">Rolling Megathron</button>
+          <button class="btn btn-default" @click="demoAddValue('https://evepraisal.com/a/jsndg')">Sisters Launcher</button>
         </div>
 
       </div>
@@ -119,7 +119,7 @@
               </thead>
               <tbody>
                 <tr v-for="evepraisal in evepraisals">
-                  <td><a target="_blank" href="http://evepraisal.com/e/{{ evepraisal.id }}">{{ evepraisal.id }}</a></td>
+                  <td><a target="_blank" href="https://evepraisal.com/a/{{ evepraisal.id }}">{{ evepraisal.id }}</a></td>
                   <td>{{ evepraisal.market_name }}</td>
                   <td>{{ evepraisal.kind }}</td>
                   <td class="isk">{{ evepraisal.totals.buy | currency '' 2 }}</td>
