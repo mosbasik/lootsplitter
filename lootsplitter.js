@@ -121,23 +121,34 @@
                 this.iskAmounts.$remove(iskAmount);
             },
 
+            /**
+             * Add an Evepraisal to the list of Evepraisals
+             * @param url URL of the evepraisal being added
+             */
             addEvepraisal: function(url) {
-                function addEvepraisalAJAX(url, callbackFunction) {
-                    $.ajax({
-                        dataType: "json",
-                        url: "https://crossorigin.me/" + url + ".json",
-                        success: function(data) {
-                            callbackFunction(data);
-                        }
-                    });
-                }
+                /**
+                 * URL of CORS proxy (needed b/c Evepraisal lacks CORS support)
+                 *
+                 * This is a list of other proxies in case this one goes down:
+                 * https://gist.github.com/jimmywarting/ac1be6ea0297c16c477e17f8fbe51347
+                 * (and there is always the option of hosting our own).
+                 */
+                var proxyUrl = "https://cors-anywhere.herokuapp.com/";
 
-                addEvepraisalAJAX(
-                    url,
-                    $.proxy(function(data) {
-                        this.evepraisals.push(data);
-                    }, this)
-                );
+                axios
+                    .get(`${proxyUrl}${url}.json`, {
+                        headers: {
+                            "User-Agent": "mosbasik.github.io/lootsplitter"
+                        }
+                    })
+                    .then(response => {
+                        // handle success
+                        this.evepraisals.push(response.data);
+                    })
+                    .catch(error => {
+                        // handle failure
+                        console.log(error);
+                    });
             },
 
             removeEvepraisal: function(evepraisal) {
