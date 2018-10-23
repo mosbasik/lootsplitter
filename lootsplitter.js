@@ -107,7 +107,9 @@
                     } else if (/^\d*\.?\d+$/.test(line)) {
                         this.addIskAmount(line);
                     } else {
-                        console.log("Invalid value input.");
+                        console.log(
+                            `Input "${line}" not recognized as an Evepraisal URL or ISK amount.`
+                        );
                     }
                 }
                 this.newValue = "";
