@@ -1,28 +1,23 @@
-
-
-(function (exports) {
-
+(function(exports) {
     // var fleetMember = Vue.extend({
-        
+    // What is this?
     // })
 
     exports.app = new Vue({
-
         // the root element that will be compiled
-        el: '#splitterapp',
+        el: "#splitterapp",
 
         // app initial state
         data: {
             fleet: {},
-            newFleetMember: '',
+            newFleetMember: "",
             iskAmounts: [],
             evepraisals: [],
-            newValue: '',
+            newValue: ""
         },
 
         // computed properties
         computed: {
-
             fleetSize: function() {
                 return Object.keys(this.fleet).length;
             },
@@ -62,18 +57,18 @@
             },
 
             totalEvepraisalsAvg: function() {
-                return (this.totalEvepraisalsBuy + this.totalEvepraisalsSell) / 2;
+                return (
+                    (this.totalEvepraisalsBuy + this.totalEvepraisalsSell) / 2
+                );
             },
 
             totalValue: function() {
                 return this.totalIskAmounts + this.totalEvepraisalsAvg;
-            },
-
+            }
         },
 
         // methods that implement data logic
         methods: {
-                
             demoAddFleetMember: function(names) {
                 this.newFleetMember = names;
                 this.addFleetMember();
@@ -86,9 +81,9 @@
                 }
                 var lines = value.split(/\r\n|\r|\n/g);
                 for (var name of lines) {
-                    this.fleet = Object.assign({}, this.fleet, {[name]: 1});
+                    this.fleet = Object.assign({}, this.fleet, { [name]: 1 });
                 }
-                this.newFleetMember = '';
+                this.newFleetMember = "";
             },
 
             removeFleetMember: function(memberName) {
@@ -107,15 +102,17 @@
                 }
                 var lines = value.split(/\r\n|\r|\n/g);
                 for (var line of lines) {
-                    if (/https?:\/\/evepraisal\.com\/e\/\d+/.test(line)) {
+                    if (/https?:\/\/evepraisal\.com\/a\/[a-z0-9]+/.test(line)) {
                         this.addEvepraisal(line);
                     } else if (/^\d*\.?\d+$/.test(line)) {
                         this.addIskAmount(line);
                     } else {
-                        console.log('Invalid value input.');
+                        console.log(
+                            `Input "${line}" not recognized as an Evepraisal URL or ISK amount.`
+                        );
                     }
                 }
-                this.newValue = '';
+                this.newValue = "";
             },
 
             addIskAmount: function(amount) {
@@ -126,22 +123,34 @@
                 this.iskAmounts.$remove(iskAmount);
             },
 
+            /**
+             * Add an Evepraisal to the list of Evepraisals
+             * @param url URL of the evepraisal being added
+             */
             addEvepraisal: function(url) {
+                /**
+                 * URL of CORS proxy (needed b/c Evepraisal lacks CORS support)
+                 *
+                 * This is a list of other proxies in case this one goes down:
+                 * https://gist.github.com/jimmywarting/ac1be6ea0297c16c477e17f8fbe51347
+                 * (and there is always the option of hosting our own).
+                 */
+                var proxyUrl = "https://cors-anywhere.herokuapp.com/";
 
-                function addEvepraisalAJAX(url, callbackFunction) {
-                    $.ajax({
-                        dataType: 'json',
-                        url: 'https://crossorigin.me/' + url + '.json',
-                        success: function(data) {
-                            callbackFunction(data);
+                axios
+                    .get(`${proxyUrl}${url}.json`, {
+                        headers: {
+                            "User-Agent": "mosbasik.github.io/lootsplitter"
                         }
+                    })
+                    .then(response => {
+                        // handle success
+                        this.evepraisals.push(response.data);
+                    })
+                    .catch(error => {
+                        // handle failure
+                        console.log(error);
                     });
-                }
-
-                addEvepraisalAJAX(url, $.proxy(function(data) {
-                    this.evepraisals.push(data);
-                }, this));
-
             },
 
             removeEvepraisal: function(evepraisal) {
@@ -150,7 +159,7 @@
 
             memberPercent: function(memberShares) {
                 if (memberShares) {
-                    return memberShares / this.totalShares * 100;
+                    return (memberShares / this.totalShares) * 100;
                 } else {
                     return 0;
                 }
@@ -162,11 +171,8 @@
                 } else {
                     return 0;
                 }
-            },
-
+            }
         },
-
-
 
         // custom directive to wait for the DOM to be updated before focusing
         // on the input field
@@ -180,10 +186,6 @@
             //         el.focus();
             //     });
             // },
-        },
-
-
-
+        }
     }); // end of app definition
-
 })(window);
