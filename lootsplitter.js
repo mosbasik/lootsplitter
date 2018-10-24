@@ -251,6 +251,24 @@
             }
         },
 
+        filters: {
+            /**
+             * Format an amount of ISK to a nice human readable format
+             *
+             * @param {number} value - amount of ISK to format
+             * @returns {string} amount of ISK in human readable format
+             */
+            iskFormat: function(value) {
+                return accounting.formatMoney(value, {
+                    symbol: "",
+                    thousand: ",",
+                    decimal: ".",
+                    precision: 2,
+                    format: "%v"
+                });
+            }
+        },
+
         // custom directive to wait for the DOM to be updated before focusing
         // on the input field
         directives: {

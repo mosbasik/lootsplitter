@@ -89,14 +89,14 @@
               <tbody>
                 <tr v-for="iskAmount in iskAmounts">
                   <td></td>
-                  <td class="isk"><span>{{ iskAmount | currency '' 2 }}</span></td>
+                  <td class="isk"><span>{{ iskAmount | iskFormat }}</span></td>
                   <td class="table-button"><button class="btn btn-danger btn-xs" @click="removeIskAmount(iskAmount)">x</button></td>
                 </tr>
               </tbody>
               <tfoot>
                 <tr>
                   <th>Totals:</th>
-                  <th class="isk">{{ totalIskAmounts | currency '' 2 }}</th>
+                  <th class="isk">{{ totalIskAmounts | iskFormat }}</th>
                   <th></th>
                 </tr>
               </tfoot>
@@ -122,9 +122,9 @@
                   <td><a target="_blank" href="https://evepraisal.com/a/{{ evepraisal.id }}">{{ evepraisal.id }}</a></td>
                   <td>{{ evepraisal.market_name }}</td>
                   <td>{{ evepraisal.kind }}</td>
-                  <td class="isk">{{ evepraisal.totals.buy | currency '' 2 }}</td>
-                  <td class="isk">{{ evepraisal.totals.sell | currency '' 2 }}</td>
-                  <td class="isk">{{ (evepraisal.totals.buy + evepraisal.totals.sell) / 2 | currency '' 2 }}</td>
+                  <td class="isk">{{ evepraisal.totals.buy | iskFormat }}</td>
+                  <td class="isk">{{ evepraisal.totals.sell | iskFormat }}</td>
+                  <td class="isk">{{ (evepraisal.totals.buy + evepraisal.totals.sell) / 2 | iskFormat }}</td>
                   <td class="table-button"><button class="btn btn-danger btn-xs" @click="removeEvepraisal(evepraisal)">x</button></td>
                 </tr>
               </tbody>
@@ -133,9 +133,9 @@
                   <th>Totals:</th>
                   <th></th>
                   <th></th>
-                  <th class="isk">{{ totalEvepraisalsBuy | currency '' 2 }}</th>
-                  <th class="isk">{{ totalEvepraisalsSell | currency '' 2 }}</th>
-                  <th class="isk">{{ totalEvepraisalsAvg | currency '' 2 }}</th>
+                  <th class="isk">{{ totalEvepraisalsBuy | iskFormat }}</th>
+                  <th class="isk">{{ totalEvepraisalsSell | iskFormat }}</th>
+                  <th class="isk">{{ totalEvepraisalsAvg | iskFormat }}</th>
                   <th></th>
                 </tr>
               </tfoot>
@@ -161,7 +161,7 @@
               <td>{{ memberName }}</td>
               <td><input class="form-control" v-model="fleet[memberName]" debounce="500" value="{{ memberShares }}"></td>
               <td>{{ memberPercent(memberShares) | currency '' 2 }}%</td>
-              <td class="isk">{{ memberPayout(memberShares) | currency '' 2 }}</td>
+              <td class="isk">{{ memberPayout(memberShares) | iskFormat }}</td>
               <td class="table-button"><button class="btn btn-danger btn-xs" @click="removeFleetMember(memberName)">x</button>
               </td>
             </tr>
@@ -171,7 +171,7 @@
               <th>{{ fleetSize }}</th>
               <th>{{ totalShares }}</th>
               <th>100.00%</th>
-              <th class="isk">{{ totalValue | currency '' 2 }}</th>
+              <th class="isk">{{ totalValue | iskFormat }}</th>
               <th></th>
             </tr>
           </tfoot>
@@ -180,15 +180,16 @@
 
     </div>
 
+  </div>
 
 
-
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/axios@0.18.0/dist/axios.min.js"></script>
-    <script type="text/javascript" src="bootstrap/js/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-    <!-- <script type="text/javascript" src="store.js"></script> -->
-    <script type="text/javascript" src="lootsplitter.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/vue@2.5.17/dist/vue.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/axios@0.18.0/dist/axios.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/accounting@0.4.1/accounting.min.js"></script>
+  <script type="text/javascript" src="bootstrap/js/jquery-1.11.3.min.js"></script>
+  <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+  <!-- <script type="text/javascript" src="store.js"></script> -->
+  <script type="text/javascript" src="lootsplitter.js"></script>
 
 </body>
 
