@@ -253,6 +253,16 @@
 
         filters: {
             /**
+             * Format a percent to two decimal places
+             *
+             * @param {number} value - percent to format
+             * @returns {string} percent formatted with two decimal places
+             */
+            percent: function(value) {
+                return accounting.toFixed(value, 2);
+            },
+
+            /**
              * Format an amount of ISK to a nice human readable format
              *
              * @param {number} value - amount of ISK to format
