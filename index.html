@@ -87,10 +87,10 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="iskAmount in iskAmounts">
+                <tr v-for="(iskAmount, iskAmountIdx) in iskAmounts">
                   <td></td>
                   <td class="isk"><span>{{ iskAmount | iskFormat }}</span></td>
-                  <td class="table-button"><button class="btn btn-danger btn-xs" @click="removeIskAmount(iskAmount)">x</button></td>
+                  <td class="table-button"><button class="btn btn-danger btn-xs" @click="removeIskAmount(iskAmountIdx)">x</button></td>
                 </tr>
               </tbody>
               <tfoot>

@@ -44,7 +44,7 @@
             totalIskAmounts: function() {
                 var sum = 0;
                 for (var iskAmount of this.iskAmounts) {
-                    sum += iskAmount[0];
+                    sum += iskAmount;
                 }
                 return sum;
             },
@@ -169,16 +169,16 @@
              * @param {number} amount - ISK amount to be added
              */
             addIskAmount: function(amount) {
-                this.iskAmounts.push([parseFloat(amount)]);
+                this.iskAmounts.push(parseFloat(amount));
             },
 
             /**
              * Remove an ISK amount from the list of ISK amounts
              *
-             * @param {number} iskAmount - ISK amount to be be removed
+             * @param {number} iskAmountIdx - ISK amount to be be removed
              */
-            removeIskAmount: function(iskAmount) {
-                this.iskAmounts.$remove(iskAmount);
+            removeIskAmount: function(iskAmountIdx) {
+                this.iskAmounts.splice(iskAmountIdx, 1);
             },
 
             /**
@@ -218,7 +218,8 @@
              * @param {Object} evepraisal - evepraisal to be removed
              */
             removeEvepraisal: function(evepraisal) {
-                this.evepraisals.$remove(evepraisal);
+                var index = this.evepraisals.indexOf(evepraisal);
+                this.evepraisals.splice(index, 1);
             },
 
             /**
