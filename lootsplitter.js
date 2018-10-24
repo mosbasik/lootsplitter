@@ -44,7 +44,7 @@
             totalIskAmounts: function() {
                 var sum = 0;
                 for (var iskAmount of this.iskAmounts) {
-                    sum += iskAmount[0];
+                    sum += iskAmount;
                 }
                 return sum;
             },
@@ -169,16 +169,16 @@
              * @param {number} amount - ISK amount to be added
              */
             addIskAmount: function(amount) {
-                this.iskAmounts.push([parseFloat(amount)]);
+                this.iskAmounts.push(parseFloat(amount));
             },
 
             /**
              * Remove an ISK amount from the list of ISK amounts
              *
-             * @param {number} iskAmount - ISK amount to be be removed
+             * @param {number} iskAmountIdx - ISK amount to be be removed
              */
-            removeIskAmount: function(iskAmount) {
-                this.iskAmounts.$remove(iskAmount);
+            removeIskAmount: function(iskAmountIdx) {
+                this.iskAmounts.splice(iskAmountIdx, 1);
             },
 
             /**
@@ -218,7 +218,8 @@
              * @param {Object} evepraisal - evepraisal to be removed
              */
             removeEvepraisal: function(evepraisal) {
-                this.evepraisals.$remove(evepraisal);
+                var index = this.evepraisals.indexOf(evepraisal);
+                this.evepraisals.splice(index, 1);
             },
 
             /**
@@ -248,6 +249,34 @@
                 } else {
                     return 0;
                 }
+            }
+        },
+
+        filters: {
+            /**
+             * Format a percent to two decimal places
+             *
+             * @param {number} value - percent to format
+             * @returns {string} percent formatted with two decimal places
+             */
+            percent: function(value) {
+                return accounting.toFixed(value, 2);
+            },
+
+            /**
+             * Format an amount of ISK to a nice human readable format
+             *
+             * @param {number} value - amount of ISK to format
+             * @returns {string} amount of ISK in human readable format
+             */
+            iskFormat: function(value) {
+                return accounting.formatMoney(value, {
+                    symbol: "",
+                    thousand: ",",
+                    decimal: ".",
+                    precision: 2,
+                    format: "%v"
+                });
             }
         },
 
