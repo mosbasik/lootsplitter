@@ -36,7 +36,7 @@
 
         <div class="form-group">
           <label for="input-evepraisals">Input ISK amounts and Evepraisal links:</label>
-          <textarea id="input-evepraisals" class="form-control" placeholder="{{ 'Supports pasting multiple lines\nPress ENTER to submit' }}"
+          <textarea id="input-evepraisals" class="form-control" :placeholder="'Supports pasting multiple lines\nPress ENTER to submit'"
             autofocus v-model="newValue" @keyup.enter="addValue"></textarea>
         </div>
         <div class="form-group">
@@ -55,7 +55,7 @@
 
         <div class="form-group">
           <label for="fleet-member-input">Input fleet member names:</label>
-          <textarea id="fleet-member-input" class="form-control" placeholder="{{ 'Supports pasting multiple lines\nPress ENTER to submit' }}"
+          <textarea id="fleet-member-input" class="form-control" :placeholder="'Supports pasting multiple lines\nPress ENTER to submit'"
             autofocus v-model="newFleetMember" @keyup.enter="addFleetMember"></textarea>
         </div>
         <div class="form-group">
@@ -119,7 +119,7 @@
               </thead>
               <tbody>
                 <tr v-for="evepraisal in evepraisals">
-                  <td><a target="_blank" href="https://evepraisal.com/a/{{ evepraisal.id }}">{{ evepraisal.id }}</a></td>
+                  <td><a target="_blank" :href="`https://evepraisal.com/a/${evepraisal.id}`">{{ evepraisal.id }}</a></td>
                   <td>{{ evepraisal.market_name }}</td>
                   <td>{{ evepraisal.kind }}</td>
                   <td class="isk">{{ evepraisal.totals.buy | iskFormat }}</td>
