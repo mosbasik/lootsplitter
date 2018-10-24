@@ -157,9 +157,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(memberName, memberShares) in fleet | orderBy false">
+            <tr v-for="(memberShares, memberName) in fleet">
               <td>{{ memberName }}</td>
-              <td><input class="form-control" v-model="fleet[memberName]" debounce="500" value="{{ memberShares }}"></td>
+              <td><input class="form-control" v-model="fleet[memberName]" debounce="500"></td>
               <td>{{ memberPercent(memberShares) | percent }}%</td>
               <td class="isk">{{ memberPayout(memberShares) | iskFormat }}</td>
               <td class="table-button"><button class="btn btn-danger btn-xs" @click="removeFleetMember(memberName)">x</button>
