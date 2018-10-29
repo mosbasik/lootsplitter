@@ -188,20 +188,12 @@
              */
             addEvepraisal: function(url) {
                 /**
-                 * URL of CORS proxy (needed b/c Evepraisal lacks CORS support)
-                 *
-                 * This is a list of other proxies in case this one goes down:
-                 * https://gist.github.com/jimmywarting/ac1be6ea0297c16c477e17f8fbe51347
-                 * (and there is always the option of hosting our own).
+                 * My CORS proxy URL (needed b/c Evepraisal lacks CORS support)
                  */
-                var proxyUrl = "https://cors-anywhere.herokuapp.com/";
+                var proxyUrl = "https://cors-anywhere.peterhenry.net/";
 
                 axios
-                    .get(`${proxyUrl}${url}.json`, {
-                        headers: {
-                            "User-Agent": "mosbasik.github.io/lootsplitter"
-                        }
-                    })
+                    .get(`${proxyUrl}${url}.json`)
                     .then(response => {
                         // handle success
                         this.evepraisals.push(response.data);
